@@ -2,6 +2,7 @@
 #include "MainScreen.h"
 #include "MenuScreen.h"
 #include "DevicesScreen.h"
+#include "LoadScreen.h"
 #include <Arduino.h>
 
 void ScreenManager::switchTo(Screen newScreen) {
@@ -9,6 +10,12 @@ void ScreenManager::switchTo(Screen newScreen) {
         Serial.println("Switching screen...");
 
         switch (newScreen) {
+            case Screen::LOAD:
+                currentScreen = Screen::LOAD;
+                Serial.println("Loading LOAD screen...");
+                lv_obj_clean(screen);
+                createLoadScreen(screen);
+                break;
             case Screen::MAIN:
                 currentScreen = Screen::MAIN;
                 Serial.println("Loading MAIN screen...");

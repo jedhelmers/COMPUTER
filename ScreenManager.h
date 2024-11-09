@@ -4,6 +4,7 @@
 #include "lvgl.h"
 
 enum class Screen {
+    LOAD,
     MAIN,
     MENU,
     DEVICES
