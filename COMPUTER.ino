@@ -5,8 +5,11 @@
 #include "ScreenManager.h"
 #include "SensorManager.h"
 #include "CompassSensor.h"
+#include "CANBus.h"
 
 
+static const uint32_t CAN_ID = 0x19;
+CANBus canBus(CAN_ID);
 CompassSensor compassSensor;
 Arduino_H7_Video Display(800, 480, GigaDisplayShield);
 
@@ -22,6 +25,12 @@ void setup() {
 
     // Initialize all sensors
     sensorManager.initializeSensors();
+
+    // Initialize CAN
+    if (!canBus.begin()) {
+        while (true) {} // Halt on initialization failure
+    }
+    Serial.println("CAN bus initialized.");
 }
 
 void loop() {
@@ -32,8 +41,8 @@ void loop() {
     sensorManager.pollSensors();
 
     // Example: Access compass data
-    Serial.print("Heading: ");
-    Serial.println(compassSensor.getHeading());
+    // Serial.print("Heading: ");
+    // Serial.println(compassSensor.getHeading());
     AppData::getInstance().setHeading(compassSensor.getHeading() * 10);
 
     // Simulate data changes
