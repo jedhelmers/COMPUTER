@@ -8,8 +8,6 @@
 #include "CANBus.h"
 
 
-static const uint32_t CAN_ID = 0x19;
-CANBus canBus(CAN_ID);
 CompassSensor compassSensor;
 Arduino_H7_Video Display(800, 480, GigaDisplayShield);
 
@@ -27,9 +25,13 @@ void setup() {
     sensorManager.initializeSensors();
 
     // Initialize CAN
+    // Access the singleton instance
+    CANBus& canBus = CANBus::getInstance(0x20);
+
     if (!canBus.begin()) {
         while (true) {} // Halt on initialization failure
     }
+
     Serial.println("CAN bus initialized.");
 }
 
