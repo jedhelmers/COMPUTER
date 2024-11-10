@@ -43,15 +43,23 @@ public:
         }
     }
 
-    int getCounter() const { return counter; }
-    String getMessage() const { return message; }
+    void setHeading(float value) {
+        if (heading != value) {
+            heading = value;
+            notifyListeners();
+        }
+    }
 
+    int getCounter() const { return counter; }
     int getCounter2() const { return counter2; }
+    String getMessage() const { return message; }
+    float getHeading() const { return heading; }
 
 private:
     AppData() : counter(0), message("") {}
 
     int counter;
+    float heading;
     String message;
     std::vector<std::function<void()>> listeners;
 

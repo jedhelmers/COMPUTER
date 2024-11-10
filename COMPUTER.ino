@@ -3,8 +3,11 @@
 #include "AppData.h"
 #include "styles.h"
 #include "ScreenManager.h"
+#include "SensorManager.h"
+#include "CompassSensor.h"
 
 
+CompassSensor compassSensor;
 Arduino_H7_Video Display(800, 480, GigaDisplayShield);
 
 void setup() {
@@ -12,10 +15,26 @@ void setup() {
     Display.begin();
     lv_init();
     init_styles();
+
+    // Register the compass sensor with the SensorManager
+    SensorManager& sensorManager = SensorManager::getInstance();
+    sensorManager.addSensor(&compassSensor);
+
+    // Initialize all sensors
+    sensorManager.initializeSensors();
 }
 
 void loop() {
     static int value = 0;
+
+    // Poll sensors via the SensorManager
+    SensorManager& sensorManager = SensorManager::getInstance();
+    sensorManager.pollSensors();
+
+    // Example: Access compass data
+    Serial.print("Heading: ");
+    Serial.println(compassSensor.getHeading());
+    AppData::getInstance().setHeading(compassSensor.getHeading() * 10);
 
     // Simulate data changes
     AppData::getInstance().setCounter(value++);
@@ -26,13 +45,11 @@ void loop() {
       ScreenManager::getInstance().switchTo(Screen::MENU);
     } else if (millis() > 5000 && millis() < 10000) {
       ScreenManager::getInstance().switchTo(Screen::DEVICES);
-    } else if (value < 300) {
-      ScreenManager::getInstance().switchTo(Screen::MAIN);
     } else {
-      ScreenManager::getInstance().switchTo(Screen::LOAD);
+      ScreenManager::getInstance().switchTo(Screen::MAIN);
     }
 
     // Allow LVGL to handle tasks
     lv_task_handler();
-    delay(10);
+    delay(100);
 }

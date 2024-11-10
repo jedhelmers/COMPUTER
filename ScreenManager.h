@@ -20,7 +20,7 @@ public:
     void switchTo(Screen newScreen);
 
     lv_obj_t * screen = lv_scr_act();
-    Screen currentScreen;
+    Screen currentScreen = Screen::DEVICES;
 
 private:
     ScreenManager() {}
