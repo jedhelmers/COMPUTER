@@ -28,6 +28,7 @@ bool CANBus::writeMessage(uint8_t const* data, size_t length) {
         Serial.println(rc);
         return false;
     }
-    Serial.println("Message sent");
+    Serial.print("Message sent: ");
+    Serial.println(msg);
     return true;
 }

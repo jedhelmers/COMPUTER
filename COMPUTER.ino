@@ -62,5 +62,15 @@ void loop() {
 
     // Allow LVGL to handle tasks
     lv_task_handler();
-    delay(100);
+    delay(1000);
+
+    static uint32_t msg_cnt = 0;
+
+    uint8_t msg_data[] = {0xCA, 0xFE, 0, 0, 0, 0, 0, 0};
+    memcpy(&msg_data[4], &msg_cnt, sizeof(msg_cnt));
+
+    // Use the singleton instance to send a message
+    CANBus::getInstance().writeMessage(msg_data, sizeof(msg_data));
+
+    msg_cnt++;
 }
