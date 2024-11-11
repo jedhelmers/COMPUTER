@@ -37,6 +37,19 @@ const uint8_t CAN_PIN_INT = 2;
 enum MenuState { DISTRESS, STUFF, DEVICES, DISPLAY_MENU, THEMES };
 enum ThemeState { DEFAULT, DARK, CRT, OPS, LIGHT, DONUT };
 enum ScreenState { LOAD, MAIN, MENU };
+enum class Screen {
+    LOAD,
+    MAIN,
+    MENU,
+    DEVICES
+};
+enum class MenuScreen {
+    DISTRESS,
+    STUFF,
+    DEVICES,
+    DISPLAY_MENU,
+    THEMES
+};
 
 const std::array<std::string, 5> MenuStateNames = {
     "Distress", "Stuff", "Devices", "Display", "Themes"

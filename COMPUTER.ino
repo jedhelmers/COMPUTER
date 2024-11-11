@@ -13,7 +13,7 @@ Arduino_H7_Video Display(800, 480, GigaDisplayShield);
 
 void setup() {
     Serial.begin(115200);
-    while (!Serial) {}
+    // while (!Serial) {}
 
     Display.begin();
     lv_init();
@@ -36,6 +36,13 @@ void setup() {
     }
 
     Serial.println("CAN bus initialized.");
+
+    uint8_t x[] = {0xCA, 0xFE, 0, 0, 0, 0, 0, 0};
+    static uint32_t xx = 5;
+    memcpy(&x[4], &xx, sizeof(xx));
+    if (canBus.writeMessage(x, sizeof(x))) {
+      Serial.println("Message sent successfully.");
+    }
 }
 
 void loop() {
@@ -56,31 +63,27 @@ void loop() {
     AppData::getInstance().setCounter(value++);
 
     // if (millis() < 5000) {
-    //   // ScreenManager::getInstance().switchTo(Screen::LOAD);
-    //   cnt++;
+    //   ScreenManager::getInstance().switchTo(Screen::LOAD);
     //   // AppData::getInstance().setSelectedIndex(0);
     // } else if (millis() > 10000 && millis() < 15000) {
-    //   // ScreenManager::getInstance().switchTo(Screen::MENU);
-    //   cnt++;
+    //   ScreenManager::getInstance().switchTo(Screen::MENU);
     //   // AppData::getInstance().setSelectedIndex(1);
     // } else if (millis() > 5000 && millis() < 10000) {
-    //   // ScreenManager::getInstance().switchTo(Screen::DEVICES);
-    //   cnt++;
+    //   ScreenManager::getInstance().switchTo(Screen::DEVICES);
     //   // AppData::getInstance().setSelectedIndex(2);
     // } else {
-    //   // ScreenManager::getInstance().switchTo(Screen::MAIN);
-    //   cnt++;
+    //   ScreenManager::getInstance().switchTo(Screen::MAIN);
     // }
 
     AppData::getInstance().setSelectedIndex(msg_cnt % 5);
-    AppData::getInstance().setTank1(msg_cnt % 300);
-    AppData::getInstance().setTank2((msg_cnt / 3) % 300);
-    // ScreenManager::getInstance().switchTo(Screen::MENU);
-    ScreenManager::getInstance().switchTo(Screen::MAIN);
+    AppData::getInstance().setTank1(msg_cnt % 100);
+    AppData::getInstance().setTank2((msg_cnt / 3) % 100);
+    ScreenManager::getInstance().switchTo(Screen::MENU);
+    // ScreenManager::getInstance().switchTo(Screen::MAIN);
 
     // Allow LVGL to handle tasks
     lv_task_handler();
-    delay(1000);
+    delay(100);
 
     if (compassSensor.getHeading() > 330) {
 

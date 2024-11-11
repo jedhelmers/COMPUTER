@@ -2,13 +2,7 @@
 #define SCREENMANAGER_H
 
 #include "lvgl.h"
-
-enum class Screen {
-    LOAD,
-    MAIN,
-    MENU,
-    DEVICES
-};
+#include "config.h"
 
 class ScreenManager {
 public:

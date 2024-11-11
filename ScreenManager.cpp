@@ -3,6 +3,7 @@
 #include "MenuScreen.h"
 #include "DevicesScreen.h"
 #include "LoadScreen.h"
+#include "AppData.h"
 #include <Arduino.h>
 
 void ScreenManager::switchTo(Screen newScreen) {
@@ -37,6 +38,8 @@ void ScreenManager::switchTo(Screen newScreen) {
             default:
                 Serial.println("DEFAULT");
         }
+
+        AppData::getInstance().setCurrentScreen(currentScreen);
         
         Serial.println("Screen switch complete.");
     }

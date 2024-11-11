@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <vector>
 #include <functional>
+#include "config.h"
 
 class AppData {
 public:
@@ -71,11 +72,27 @@ public:
         }
     }
 
+    void setCurrentScreen(Screen newScreen) {
+        if (newScreen != currentScreen) {
+            currentScreen = newScreen;
+            notifyListeners();
+        }
+    }
+
+    void setCurrentMenuScreen(MenuScreen newScreen) {
+        if (newScreen != currentMenuScreen) {
+            currentMenuScreen = newScreen;
+            notifyListeners();
+        }
+    }
+
     int getCounter() const { return counter; }
     int getCounter2() const { return counter2; }
     int getTank1() const { return tank1; }
     int getTank2() const { return tank2; }
     int getSelectedIndex() const { return selectedIndex; }
+    Screen getCurrentScreen() { return currentScreen; }
+    MenuScreen getCurrentMenuScreen() { return currentMenuScreen; }
     String getMessage() const { return message; }
     float getHeading() const { return heading; }
 
@@ -87,6 +104,8 @@ private:
     int tank2;
     float heading;
     String message;
+    Screen currentScreen;
+    MenuScreen currentMenuScreen = MenuScreen::THEMES;
     std::vector<std::function<void()>> listeners;
 
     // Menu

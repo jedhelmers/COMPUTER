@@ -26,13 +26,13 @@ int direction = 40;
 int tank_1_value = 40;
 
 void updateMainScreen() {
-    if (main_screen) {
+    if (AppData::getInstance().getCurrentScreen() == Screen::MAIN) {
         lv_label_set_text_fmt(tank_1_label, "%d", AppData::getInstance().getTank1());
-        // lv_bar_set_value(tank_1_gauge, AppData::getInstance().getTank1(), LV_ANIM_ON);
+        lv_bar_set_value(tank_1_gauge, AppData::getInstance().getTank1(), LV_ANIM_ON);
         lv_bar_set_value(tank_1_gauge, (float)AppData::getInstance().getTank1() / TANK_MAX, LV_ANIM_ON);
 
         lv_label_set_text_fmt(tank_2_label, "%d", AppData::getInstance().getTank2());
-        // lv_bar_set_value(tank_1_gauge, AppData::getInstance().getTank1(), LV_ANIM_ON);
+        lv_bar_set_value(tank_2_gauge, AppData::getInstance().getTank2(), LV_ANIM_ON);
         lv_bar_set_value(tank_2_gauge, (float)AppData::getInstance().getTank2() / TANK_MAX, LV_ANIM_ON);
 
         // Set angles for visual elements
