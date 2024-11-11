@@ -1,11 +1,16 @@
 #ifndef CANBUS_H
 #define CANBUS_H
 
-#include <Arduino_CAN.h>
+#include <AA_MCP2515.h>
+#include "config.h"
 
 class CANBus {
 private:
     uint32_t canId;
+
+    // CAN Configuration and Controller
+    CANConfig config;
+    CANController CAN;
 
     // Private constructor to prevent instantiation
     CANBus(uint32_t id);
@@ -15,8 +20,8 @@ private:
     CANBus& operator=(const CANBus&) = delete;
 
 public:
-    // Method to get the singleton instance
-    static CANBus& getInstance(uint32_t id = 0x20); // Default CAN ID
+    // Get the singleton instance
+    static CANBus& getInstance(uint32_t id = 0x20);
 
     // Initialize the CAN interface
     bool begin();

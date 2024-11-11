@@ -12,7 +12,9 @@ CompassSensor compassSensor;
 Arduino_H7_Video Display(800, 480, GigaDisplayShield);
 
 void setup() {
-    Serial.begin(9600);
+    Serial.begin(115200);
+    while (!Serial) {}
+
     Display.begin();
     lv_init();
     init_styles();
@@ -29,6 +31,7 @@ void setup() {
     CANBus& canBus = CANBus::getInstance(0x20);
 
     if (!canBus.begin()) {
+        Serial.println("CAN bus initializing...");
         while (true) {} // Halt on initialization failure
     }
 
@@ -62,15 +65,25 @@ void loop() {
 
     // Allow LVGL to handle tasks
     lv_task_handler();
-    delay(1000);
+    delay(10);
 
     static uint32_t msg_cnt = 0;
 
-    uint8_t msg_data[] = {0xCA, 0xFE, 0, 0, 0, 0, 0, 0};
-    memcpy(&msg_data[4], &msg_cnt, sizeof(msg_cnt));
+    if (compassSensor.getHeading() > 330) {
 
-    // Use the singleton instance to send a message
-    CANBus::getInstance().writeMessage(msg_data, sizeof(msg_data));
+      uint8_t msg_data[] = {0xCA, 0xFE, 0, 0, 0, 0, 0, 0};
+      memcpy(&msg_data[4], &msg_cnt, sizeof(msg_cnt));
+
+      // Use the singleton instance to send a message
+      // CANBus::getInstance().writeMessage(msg_data, sizeof(msg_data));
+      // Access the singleton instance
+      CANBus& canBus = CANBus::getInstance();
+
+      // Transmit a CAN message
+      if (canBus.writeMessage(msg_data, sizeof(msg_data))) {
+        Serial.println("Message sent successfully.");
+      }
+    }
 
     msg_cnt++;
 }
