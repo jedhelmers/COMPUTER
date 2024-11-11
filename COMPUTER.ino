@@ -83,7 +83,7 @@ void loop() {
 
     // Allow LVGL to handle tasks
     lv_task_handler();
-    delay(100);
+    delay(500);
 
     if (compassSensor.getHeading() > 330) {
 

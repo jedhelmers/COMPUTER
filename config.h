@@ -54,5 +54,9 @@ enum class MenuScreen {
 const std::array<std::string, 5> MenuStateNames = {
     "Distress", "Stuff", "Devices", "Display", "Themes"
 };
+const std::array<std::string, 6> ThemeStateNames = {
+   "DEFAULT", "DARK", "CRT", "OPS", "LIGHT", "DONUT"
+};
+
 
 #endif
