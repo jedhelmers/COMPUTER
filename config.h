@@ -1,6 +1,9 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <array>
+#include <string>
+
 #define ROW_HEIGHT 68
 #define BUTTON_WIDTH 40
 #define TANK_MAX 300
@@ -34,5 +37,9 @@ const uint8_t CAN_PIN_INT = 2;
 enum MenuState { DISTRESS, STUFF, DEVICES, DISPLAY_MENU, THEMES };
 enum ThemeState { DEFAULT, DARK, CRT, OPS, LIGHT, DONUT };
 enum ScreenState { LOAD, MAIN, MENU };
+
+const std::array<std::string, 5> MenuStateNames = {
+    "Distress", "Stuff", "Devices", "Display", "Themes"
+};
 
 #endif

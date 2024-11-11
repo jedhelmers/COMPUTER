@@ -40,6 +40,8 @@ void setup() {
 
 void loop() {
     static int value = 0;
+    static uint32_t msg_cnt = 0;
+
 
     // Poll sensors via the SensorManager
     SensorManager& sensorManager = SensorManager::getInstance();
@@ -53,21 +55,32 @@ void loop() {
     // Simulate data changes
     AppData::getInstance().setCounter(value++);
 
-    if (millis() < 5000) {
-      ScreenManager::getInstance().switchTo(Screen::LOAD);
-    } else if (millis() > 10000 && millis() < 15000) {
-      ScreenManager::getInstance().switchTo(Screen::MENU);
-    } else if (millis() > 5000 && millis() < 10000) {
-      ScreenManager::getInstance().switchTo(Screen::DEVICES);
-    } else {
-      ScreenManager::getInstance().switchTo(Screen::MAIN);
-    }
+    // if (millis() < 5000) {
+    //   // ScreenManager::getInstance().switchTo(Screen::LOAD);
+    //   cnt++;
+    //   // AppData::getInstance().setSelectedIndex(0);
+    // } else if (millis() > 10000 && millis() < 15000) {
+    //   // ScreenManager::getInstance().switchTo(Screen::MENU);
+    //   cnt++;
+    //   // AppData::getInstance().setSelectedIndex(1);
+    // } else if (millis() > 5000 && millis() < 10000) {
+    //   // ScreenManager::getInstance().switchTo(Screen::DEVICES);
+    //   cnt++;
+    //   // AppData::getInstance().setSelectedIndex(2);
+    // } else {
+    //   // ScreenManager::getInstance().switchTo(Screen::MAIN);
+    //   cnt++;
+    // }
+
+    AppData::getInstance().setSelectedIndex(msg_cnt % 5);
+    AppData::getInstance().setTank1(msg_cnt % 300);
+    AppData::getInstance().setTank2((msg_cnt * 1.2) % 300);
+    // ScreenManager::getInstance().switchTo(Screen::MENU);
+    ScreenManager::getInstance().switchTo(Screen::MAIN);
 
     // Allow LVGL to handle tasks
     lv_task_handler();
-    delay(10);
-
-    static uint32_t msg_cnt = 0;
+    delay(1000);
 
     if (compassSensor.getHeading() > 330) {
 

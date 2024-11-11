@@ -27,9 +27,13 @@ int tank_1_value = 40;
 
 void updateMainScreen() {
     if (main_screen) {
-        lv_label_set_text_fmt(tank_1_label, "%d", AppData::getInstance().getCounter());
-        // lv_bar_set_value(tank_1_gauge, AppData::getInstance().getCounter(), LV_ANIM_ON);
-        lv_bar_set_value(tank_1_gauge, (float)AppData::getInstance().getCounter() / TANK_MAX, LV_ANIM_ON);
+        lv_label_set_text_fmt(tank_1_label, "%d", AppData::getInstance().getTank1());
+        // lv_bar_set_value(tank_1_gauge, AppData::getInstance().getTank1(), LV_ANIM_ON);
+        lv_bar_set_value(tank_1_gauge, (float)AppData::getInstance().getTank1() / TANK_MAX, LV_ANIM_ON);
+
+        lv_label_set_text_fmt(tank_2_label, "%d", AppData::getInstance().getTank2());
+        // lv_bar_set_value(tank_1_gauge, AppData::getInstance().getTank1(), LV_ANIM_ON);
+        lv_bar_set_value(tank_2_gauge, (float)AppData::getInstance().getTank2() / TANK_MAX, LV_ANIM_ON);
 
         // Set angles for visual elements
         lv_img_set_angle(compass_img, AppData::getInstance().getHeading());

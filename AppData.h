@@ -50,8 +50,32 @@ public:
         }
     }
 
+    void setSelectedIndex(float value) {
+        if (selectedIndex != value) {
+            selectedIndex = value;
+            notifyListeners();
+        }
+    }
+
+    void setTank1(float value) {
+        if (tank1 != value) {
+            tank1 = value;
+            notifyListeners();
+        }
+    }
+
+    void setTank2(float value) {
+        if (tank2 != value) {
+            tank2 = value;
+            notifyListeners();
+        }
+    }
+
     int getCounter() const { return counter; }
     int getCounter2() const { return counter2; }
+    int getTank1() const { return tank1; }
+    int getTank2() const { return tank2; }
+    int getSelectedIndex() const { return selectedIndex; }
     String getMessage() const { return message; }
     float getHeading() const { return heading; }
 
@@ -59,9 +83,14 @@ private:
     AppData() : counter(0), message("") {}
 
     int counter;
+    int tank1;
+    int tank2;
     float heading;
     String message;
     std::vector<std::function<void()>> listeners;
+
+    // Menu
+    int selectedIndex = 0;
 
     int counter2;
 };
