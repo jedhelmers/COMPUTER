@@ -18,6 +18,7 @@ private:
     // Delete copy constructor and assignment operator
     CANBus(const CANBus&) = delete;
     CANBus& operator=(const CANBus&) = delete;
+    bool _writeMessage(uint32_t id, uint8_t const* data, size_t length);
 
 public:
     // Get the singleton instance
@@ -28,6 +29,7 @@ public:
 
     // Write a message to the CAN bus
     bool writeMessage(uint8_t const* data, size_t length);
+    bool writeMessage(uint32_t id, uint8_t const* data, size_t length);
 };
 
 #endif

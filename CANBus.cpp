@@ -26,13 +26,13 @@ bool CANBus::begin() {
 
 
 // Write a message to the CAN bus
-bool CANBus::writeMessage(uint8_t const* data, size_t length) {
+bool CANBus::_writeMessage(uint32_t id, uint8_t const* data, size_t length) {
     if (length > 8) {
         Serial.println("Error: CAN data length exceeds 8 bytes.");
         return false; // CAN frames are limited to 8 bytes
     }
 
-    CANFrame frame(canId, data, length);
+    CANFrame frame(id, data, length);
 
     // Attempt to write the CAN frame
     CANController::IOResult result = CAN.write(frame);
@@ -77,4 +77,10 @@ bool CANBus::writeMessage(uint8_t const* data, size_t length) {
     return false;
 }
 
+bool CANBus::writeMessage(uint8_t const* data, size_t length) {
+    return CANBus::_writeMessage(CANBus::canId, data, length);
+}
 
+bool CANBus::writeMessage(uint32_t id, uint8_t const* data, size_t length) {
+    return CANBus::_writeMessage(id, data, length);
+}
