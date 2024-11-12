@@ -8,8 +8,6 @@
 
 void ScreenManager::switchTo(Screen newScreen) {
     if (newScreen != currentScreen) {
-        Serial.println("Switching screen...");
-
         switch (newScreen) {
             case Screen::LOAD:
                 currentScreen = Screen::LOAD;
@@ -36,11 +34,9 @@ void ScreenManager::switchTo(Screen newScreen) {
                 createDevicesScreen(screen);
                 break;
             default:
-                Serial.println("DEFAULT");
+                Serial.println("Screen change failed.");
         }
 
         AppData::getInstance().setCurrentScreen(currentScreen);
-        
-        Serial.println("Screen switch complete.");
     }
 }

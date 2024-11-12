@@ -22,8 +22,14 @@ void updateSelectedItem() {
         lv_label_set_text(label_main, MenuStateNames[AppData::getInstance().getSelectedIndex()].c_str());
 
         // Submenu
-        // MenuState[0];
         MenuScreenManager::getInstance().switchTo(body_content, static_cast<MenuScreen>(AppData::getInstance().getSelectedIndex()));
+
+        // SANITY CHECK
+        if (static_cast<MenuScreen>(AppData::getInstance().getSelectedIndex()) == MenuScreen::THEMES) {
+            lv_obj_add_style(menu_items[AppData::getInstance().getSelectedIndex()], style_sub_selected, LV_STATE_CHECKED);
+            AppData::getInstance().setSubmenuStatus(true);
+            // Serial.println(AppData::getInstance().getSubmenuStatus());
+        }
     }
 }
 
@@ -74,7 +80,7 @@ void createMenuScreen(lv_obj_t* screen) {
     lv_obj_align(label_main, LV_ALIGN_TOP_LEFT, 0, 0);
     lv_obj_add_style(label_main, label_style, LV_PART_MAIN);
     lv_obj_add_style(label_main, row_style, LV_PART_MAIN);
-    lv_obj_set_size(label_main, 510, 49);
+    lv_obj_set_size(label_main, 562, 49);
     lv_obj_set_style_margin_all(label_main, 6, 0);
 
     // Menu items in Column 2

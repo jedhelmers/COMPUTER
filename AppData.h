@@ -51,11 +51,29 @@ public:
         }
     }
 
-    void setSelectedIndex(float value) {
+    void _setSelectedIndex(float value) {
         if (selectedIndex != value) {
             selectedIndex = value;
             notifyListeners();
         }
+    }
+
+    void _setSubSelectedIndex(float value) {
+        if (subSelectedIndex != value) {
+            subSelectedIndex = value;
+            notifyListeners();
+        }
+    }
+
+    void setSelectedIndex(float value) {
+        if (!submenuStatus) {
+            _setSelectedIndex(value);
+        } else {
+            _setSubSelectedIndex(value);
+            setTheme(value);
+        }
+
+        notifyListeners();
     }
 
     void setTank1(float value) {
@@ -86,11 +104,32 @@ public:
         }
     }
 
+    void setSubmenuStatus(bool _submenuStatus) {
+        if (_submenuStatus != submenuStatus) {
+            submenuStatus = _submenuStatus;
+            notifyListeners();
+        }
+    }
+
+    void setTheme(int theme) {
+        setTheme(static_cast<ThemeState>(theme));
+    }
+
+    void setTheme(ThemeState theme) {
+        if (theme != selectedTheme) {
+            theme = selectedTheme;
+            notifyListeners();
+        }
+    }
+
     int getCounter() const { return counter; }
     int getCounter2() const { return counter2; }
+    bool getSubmenuStatus() const { return submenuStatus; }
     int getTank1() const { return tank1; }
     int getTank2() const { return tank2; }
     int getSelectedIndex() const { return selectedIndex; }
+    int getSetSubSelectedIndex() const { return subSelectedIndex; }
+    ThemeState getSelectedTheme() const { return selectedTheme; }
     Screen getCurrentScreen() { return currentScreen; }
     MenuScreen getCurrentMenuScreen() { return currentMenuScreen; }
     String getMessage() const { return message; }
@@ -102,6 +141,7 @@ private:
     int counter;
     int tank1;
     int tank2;
+    bool submenuStatus = false;
     float heading;
     String message;
     Screen currentScreen;
@@ -110,6 +150,10 @@ private:
 
     // Menu
     int selectedIndex = 0;
+    int subSelectedIndex = 0;
+
+    // Themes
+    ThemeState selectedTheme = ThemeState::CRT;
 
     int counter2;
 };

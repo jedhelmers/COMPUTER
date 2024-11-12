@@ -1,4 +1,4 @@
-#include <AA_MCP2515.h>
+#include <Arduino.h>
 #include "CANBus.h"
 #include "config.h"
 
@@ -11,76 +11,71 @@ CANBus& CANBus::getInstance(uint32_t id) {
 // Private constructor
 CANBus::CANBus(uint32_t id)
     : canId(id),
-      config(CANBitrate::Config_8MHz_250kbps, CAN_PIN_CS, CAN_PIN_INT, SPI),
-      CAN(config) {}
+      can1(PB_5, PB_13) { // Initialize CAN with specified pins
+}
 
 // Initialize the CAN interface
 bool CANBus::begin() {
-    while (CAN.begin(CANController::Mode::Loopback) != 0) {
-        Serial.println("CAN initialization failed. Retrying...");
-        delay(1000); // Retry delay
+    if (can1.frequency(1000000)) { // Set CAN frequency
+        Serial.println("CAN initialized successfully!");
+        return true;
+    } else {
+        Serial.println("Failed to initialize CAN.");
+        return false;
     }
-    Serial.println("CAN initialization successful!");
-    return true;
 }
 
-
-// Write a message to the CAN bus
+// Internal method to write a CAN message
 bool CANBus::_writeMessage(uint32_t id, uint8_t const* data, size_t length) {
     if (length > 8) {
         Serial.println("Error: CAN data length exceeds 8 bytes.");
-        return false; // CAN frames are limited to 8 bytes
+        return false;
     }
 
-    CANFrame frame(id, data, length);
+    mbed::CANMessage message(id, data, length);
 
-    // Attempt to write the CAN frame
-    CANController::IOResult result = CAN.write(frame);
-
-    // Debug print for write result
-    Serial.print("CAN.write result: ");
-    switch (result) {
-        case CANController::IOResult::OK:
-            Serial.println("OK");
-            frame.print("CAN TX"); // Successfully sent
-            return true;
-        case CANController::IOResult::FAIL:
-            Serial.println("FAIL");
-            break;
-        case CANController::IOResult::NODATA:
-            Serial.println("NODATA");
-            break;
-        case CANController::IOResult::NOBUFFER:
-            Serial.println("NOBUFFER");
-            break;
-        case CANController::IOResult::TIMEOUT:
-            Serial.println("TIMEOUT");
-            break;
-        default:
-            Serial.println("UNKNOWN ERROR");
+    if (can1.write(message)) {
+        Serial.print("Message sent successfully. ID: 0x");
+        Serial.print(id, HEX);
+        Serial.print(" Data: ");
+        for (size_t i = 0; i < length; i++) {
+            Serial.print(data[i], HEX);
+            Serial.print(" ");
+        }
+        Serial.println();
+        return true;
+    } else {
+        Serial.println("Failed to send CAN message.");
+        Serial.print("Transmission error: ");
+        Serial.println(can1.tderror());
+        can1.reset();
+        return false;
     }
-
-    // If the write fails, print detailed error information
-    Serial.println("Failed to send CAN message.");
-    Serial.print("Data: ");
-    for (size_t i = 0; i < length; i++) {
-        Serial.print(data[i], HEX); // Print each byte in HEX format
-        Serial.print(" ");
-    }
-    Serial.println();
-
-    // Fetch and print detailed CAN controller errors
-    CANErrors errors = CAN.getErrors();
-    Serial.print("CAN Errors: ");
-    errors.print();
-
-    return false;
 }
 
+// Public method to write a CAN message with the default ID
 bool CANBus::writeMessage(uint8_t const* data, size_t length) {
     return CANBus::_writeMessage(CANBus::canId, data, length);
 }
 
+// Public method to write a CAN message with a specific ID
 bool CANBus::writeMessage(uint32_t id, uint8_t const* data, size_t length) {
     return CANBus::_writeMessage(id, data, length);
+}
+
+// Method to receive CAN messages
+void CANBus::receive() {
+    mbed::CANMessage msg;
+    if (can1.read(msg)) {
+        Serial.print("Message received. ID: 0x");
+        Serial.print(msg.id, HEX);
+        Serial.print(" Data: ");
+        for (size_t i = 0; i < msg.len; i++) {
+            Serial.print(msg.data[i], HEX);
+            Serial.print(" ");
+        }
+        Serial.println();
+    } else {
+        Serial.println("No CAN message available.");
+    }
 }

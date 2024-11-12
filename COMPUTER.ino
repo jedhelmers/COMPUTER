@@ -47,7 +47,7 @@ void setup() {
 
 void loop() {
     static int value = 0;
-    static uint32_t msg_cnt = 0;
+    static uint32_t msg_cnt = 1;
 
 
     // Poll sensors via the SensorManager
@@ -101,5 +101,5 @@ void loop() {
       }
     }
 
-    msg_cnt++;
+    msg_cnt *= 2;
 }
