@@ -5,4 +5,6 @@
 
 void createThemeMenuScreen(lv_obj_t* parent);
 
+void themeSelectionHandler();
+
 #endif

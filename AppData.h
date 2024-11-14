@@ -47,7 +47,7 @@ public:
     void setHeading(float value) {
         if (heading != value) {
             heading = value;
-            notifyListeners();
+            if (currentScreen == Screen::MAIN) notifyListeners();
         }
     }
 
@@ -68,20 +68,19 @@ public:
     void setTank1(float value) {
         if (tank1 != value) {
             tank1 = value;
-            notifyListeners();
+            if (currentScreen == Screen::MAIN) notifyListeners();
         }
     }
 
     void setTank2(float value) {
         if (tank2 != value) {
             tank2 = value;
-            notifyListeners();
+            if (currentScreen == Screen::MAIN) notifyListeners();
         }
     }
 
     void setCurrentScreen(Screen newScreen) {
         if (newScreen != currentScreen) {
-            Serial.println("CHANGE");
             currentScreen = newScreen;
             notifyListeners();
         }
@@ -101,11 +100,11 @@ public:
         }
     }
 
-    void setTheme(int theme) {
-        setTheme(static_cast<ThemeState>(theme));
+    void setSelectedTheme(int theme) {
+        setSelectedTheme(static_cast<ThemeState>(theme));
     }
 
-    void setTheme(ThemeState theme) {
+    void setSelectedTheme(ThemeState theme) {
         if (theme != selectedTheme) {
             theme = selectedTheme;
             notifyListeners();
@@ -131,6 +130,7 @@ private:
     int counter;
     int tank1;
     int tank2;
+    bool isUpdating = false;
     bool submenuStatus = false;
     float heading;
     String message;

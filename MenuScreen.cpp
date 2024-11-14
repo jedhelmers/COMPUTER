@@ -1,6 +1,7 @@
 #include "MenuScreen.h"
 #include "ScreenManager.h"
 #include "MenuScreenManager.h"
+#include "ThemeMenuScreen.h"
 #include "AppData.h"
 #include "styles.h"
 #include "config.h"
@@ -18,6 +19,7 @@ void updateSelectedItem() {
             for (int i = 0; i < MenuStateNames.size(); i++) {
                 lv_obj_clear_state(menu_items[i], LV_STATE_CHECKED);
             }
+
             // Apply the selected state and style to the current item
             lv_obj_add_state(menu_items[AppData::getInstance().getSelectedIndex()], LV_STATE_CHECKED);
             lv_label_set_text(label_main, MenuStateNames[AppData::getInstance().getSelectedIndex()].c_str());
@@ -30,13 +32,6 @@ void updateSelectedItem() {
             } else {
                 lv_obj_remove_style(menu_items[AppData::getInstance().getSelectedIndex()], style_sub_selected, LV_STATE_CHECKED);
             }
-
-            // // SANITY CHECK
-            // if (static_cast<MenuScreen>(AppData::getInstance().getSelectedIndex()) == MenuScreen::THEMES) {
-            //     lv_obj_add_style(menu_items[AppData::getInstance().getSelectedIndex()], style_sub_selected, LV_STATE_CHECKED);
-            //     AppData::getInstance().setSubmenuStatus(true);
-            //     // Serial.println(AppData::getInstance().getSubmenuStatus());
-            // }
         }
     } catch (const std::exception& e) {
         Serial.print("MENU Exception: ");
@@ -112,30 +107,31 @@ void createMenuScreen(lv_obj_t* screen) {
 }
 
 void setMenuActions() {
-    if (digitalRead(UP_BUTTON) == HIGH) {
-        if (!AppData::getInstance().getSubmenuStatus()) {
-            AppData::getInstance().setSelectedIndex(
-                (AppData::getInstance().getSelectedIndex() + 1) % 5
-            );
-        }
-        Serial.println("UP Button Pressed");
-        delay(200);
-    }
-
-    if (digitalRead(DOWN_BUTTON) == HIGH) {
-        if (!AppData::getInstance().getSubmenuStatus()) {
-            int _temp = (AppData::getInstance().getSelectedIndex() - 1) % 5;
-            if (_temp < 0) _temp = 4;
-
-            AppData::getInstance().setSelectedIndex(_temp);
-        }
-        Serial.println("DOWN Button Pressed");
-        delay(200);
-    }
-
     if (digitalRead(SELECT_BUTTON) == HIGH) {
         AppData::getInstance().setSubmenuStatus(!AppData::getInstance().getSubmenuStatus());
         Serial.println("SELECT Button Pressed");
         delay(200);
+    }
+
+    if (!AppData::getInstance().getSubmenuStatus()) {
+        if (digitalRead(UP_BUTTON) == HIGH) {
+            Serial.println("UP Button Pressed");
+            AppData::getInstance().setSelectedIndex(
+                (AppData::getInstance().getSelectedIndex() + 1) % 5
+            );
+
+            delay(200);
+        }
+
+        if (digitalRead(DOWN_BUTTON) == HIGH) {
+            Serial.println("DOWN Button Pressed");
+            int _temp = (AppData::getInstance().getSelectedIndex() - 1) % 5;
+            if (_temp < 0) _temp = 4;
+
+            AppData::getInstance().setSelectedIndex(_temp);
+            delay(200);
+        }
+    } else {
+        themeSelectionHandler();
     }
 }

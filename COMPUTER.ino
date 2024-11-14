@@ -88,7 +88,7 @@ void loop() {
   AppData::getInstance().setHeading(compassSensor.getHeading() * 10);
 
   // Simulate data changes
-  AppData::getInstance().setCounter(value++);
+  // AppData::getInstance().setCounter(value++);
 
   if (millis() < 3000) {
     ScreenManager::getInstance().switchTo(Screen::LOAD);
@@ -108,10 +108,6 @@ void loop() {
   AppData::getInstance().setTank2((msg_cnt / 3) % 100);
   // ScreenManager::getInstance().switchTo(Screen::MENU);
   // ScreenManager::getInstance().switchTo(Screen::MAIN);
-
-  // Allow LVGL to handle tasks
-  lv_task_handler();
-  delay(10);
 
   CANBus& canBus = CANBus::getInstance();
 
@@ -154,4 +150,8 @@ void loop() {
   }
 
   msg_cnt++;
+
+  // Allow LVGL to handle tasks
+  lv_task_handler();
+  delay(10);
 }

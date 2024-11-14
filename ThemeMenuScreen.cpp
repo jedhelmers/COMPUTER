@@ -3,34 +3,31 @@
 #include "config.h"
 #include "AppData.h"
 
+lv_obj_t * themes_main;
 lv_obj_t *themeMenuItems[6];
 
-
 void updateSelectedThemeItem() {
-    if (AppData::getInstance().getSubmenuStatus() && AppData::getInstance().getCurrentScreen() == Screen::MENU && AppData::getInstance().getCurrentMenuScreen() == MenuScreen::THEMES) {
-        // Serial.print(AppData::getInstance().getSelectedTheme());
-        // Serial.println(AppData::getInstance().getSubmenuStatus());
-        // Serial.println(" - selectedTheme");
-
-        
+    if (AppData::getInstance().getCurrentScreen() == Screen::MENU && AppData::getInstance().getCurrentMenuScreen() == MenuScreen::THEMES && themes_main != nullptr) {
         // Reset all select states
         for (int i = 0; i < ThemeStateNames.size(); i++) {
             lv_obj_clear_state(themeMenuItems[i], LV_STATE_CHECKED);
         }
         // // Apply the selected state and style to the current item
         lv_obj_add_state(themeMenuItems[AppData::getInstance().getSelectedTheme()], LV_STATE_CHECKED);
-        // lv_label_set_text(themeMenuItems[AppData::getInstance().getSelectedIndex()], ThemeStateNames[AppData::getInstance().getSelectedIndex()].c_str());
 
-        // // Submenu
-        // // MenuState[0];
-        // MenuScreenManager::getInstance().switchTo(body_content, static_cast<MenuScreen>(AppData::getInstance().getSelectedIndex()));
-        // Serial.println("WOO");
+        if (!AppData::getInstance().getSubmenuStatus()) {
+            Serial.println("ADD STYLE");
+            lv_obj_add_style(themeMenuItems[AppData::getInstance().getSelectedTheme()], style_sub_selected, LV_STATE_CHECKED);
+        } else {
+            Serial.println("REMOVE STYLE");
+            lv_obj_remove_style(themeMenuItems[AppData::getInstance().getSelectedTheme()], style_sub_selected, LV_STATE_CHECKED);
+        }
     }
 }
 
 
 void createThemeMenuScreen(lv_obj_t* parent) {
-    lv_obj_t * themes_main = lv_label_create(parent);
+    themes_main = lv_label_create(parent);
     lv_obj_align(themes_main, LV_ALIGN_TOP_LEFT, 0, 0);
     lv_label_set_text(themes_main, "");
     lv_obj_add_style(themes_main, label_style, LV_PART_MAIN);
@@ -67,4 +64,23 @@ void createThemeMenuScreen(lv_obj_t* parent) {
 
     AppData::getInstance().addListener(updateSelectedThemeItem);
     updateSelectedThemeItem();
+}
+
+
+void themeSelectionHandler() {
+    if (digitalRead(UP_BUTTON) == HIGH) {
+        AppData::getInstance().setSelectedTheme(
+            (AppData::getInstance().getSelectedTheme() + 1) % 5
+        );
+        Serial.println("UP Button Pressed");
+        delay(200);
+    }
+
+    if (digitalRead(DOWN_BUTTON) == HIGH) {
+        int _temp = (AppData::getInstance().getSelectedTheme() - 1) % 5;
+        if (_temp < 0) _temp = 5;
+        AppData::getInstance().setSelectedTheme(_temp);
+        Serial.println("DOWN Button Pressed");
+        delay(200);
+    }
 }
