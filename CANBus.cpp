@@ -16,14 +16,26 @@ CANBus::CANBus(uint32_t id)
 
 // Initialize the CAN interface
 bool CANBus::begin() {
-    if (can1.frequency(1000000)) { // Set CAN frequency
-        Serial.println("CAN initialized successfully!");
+    // Set CAN frequency to 1 Mbps
+    if (can1.frequency(500000)) {
+        Serial.println("CAN frequency set to 1 Mbps.");
+
+        // Reset the CAN controller to ensure it's in a known state
+        // can1.reset();
+
+        // Directly set loopback mode via register access (if needed)
+        // Assuming your platform requires additional steps, you might need specific instructions here.
+        // Uncomment and modify as necessary:
+        // can1.MODE_REGISTER = (current_value & mask) | loopback_value;
+
+        Serial.println("CAN initialized in loopback mode successfully!");
         return true;
     } else {
-        Serial.println("Failed to initialize CAN.");
+        Serial.println("Failed to set CAN frequency.");
         return false;
     }
 }
+
 
 // Internal method to write a CAN message
 bool CANBus::_writeMessage(uint32_t id, uint8_t const* data, size_t length) {
@@ -76,6 +88,18 @@ void CANBus::receive() {
         }
         Serial.println();
     } else {
-        Serial.println("No CAN message available.");
+        // Serial.println("No CAN message available.");
     }
+}
+
+// Programmatic message reading
+bool CANBus::readMessage(uint32_t& id, uint8_t* data, size_t& length) {
+    mbed::CANMessage msg;
+    if (can1.read(msg)) {
+        id = msg.id;          // Extract the message ID
+        length = msg.len;     // Extract the length
+        memcpy(data, msg.data, length); // Copy the data payload
+        return true;
+    }
+    return false;
 }

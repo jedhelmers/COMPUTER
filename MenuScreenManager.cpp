@@ -7,8 +7,8 @@
 void MenuScreenManager::switchTo(lv_obj_t* screen, MenuScreen newScreen) {
     if (newScreen != currentMenuScreen) {
 
-        if (!AppData::getInstance().getSubmenuStatus()) {
-            Serial.println("Switching menu screen...");
+        // if (!AppData::getInstance().getSubmenuStatus()) {
+            // Serial.println("Switching menu screen...");
 
             switch (newScreen) {
                 case MenuScreen::THEMES:
@@ -30,6 +30,6 @@ void MenuScreenManager::switchTo(lv_obj_t* screen, MenuScreen newScreen) {
 
             AppData::getInstance().setCurrentMenuScreen(currentMenuScreen);
             // Serial.println("Screen switch complete.");
-        }
+        // }
     }
 }

@@ -33,6 +33,8 @@ public:
 
     // Optional: Add receive functionality
     void receive();
+
+    bool readMessage(uint32_t& id, uint8_t* data, size_t& length);
 };
 
 #endif

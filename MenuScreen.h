@@ -5,4 +5,6 @@
 
 void createMenuScreen(lv_obj_t* parent);
 
+void setMenuActions();
+
 #endif

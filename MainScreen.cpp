@@ -26,19 +26,24 @@ int direction = 40;
 int tank_1_value = 40;
 
 void updateMainScreen() {
-    if (AppData::getInstance().getCurrentScreen() == Screen::MAIN) {
-        lv_label_set_text_fmt(tank_1_label, "%d", AppData::getInstance().getTank1());
-        lv_bar_set_value(tank_1_gauge, AppData::getInstance().getTank1(), LV_ANIM_ON);
-        lv_bar_set_value(tank_1_gauge, (float)AppData::getInstance().getTank1() / TANK_MAX, LV_ANIM_ON);
+    try {
+        if (main_screen != nullptr && AppData::getInstance().getCurrentScreen() == Screen::MAIN) {
+            lv_label_set_text_fmt(tank_1_label, "%d", AppData::getInstance().getTank1());
+            lv_bar_set_value(tank_1_gauge, AppData::getInstance().getTank1(), LV_ANIM_ON);
+            lv_bar_set_value(tank_1_gauge, (float)AppData::getInstance().getTank1() / TANK_MAX, LV_ANIM_ON);
 
-        lv_label_set_text_fmt(tank_2_label, "%d", AppData::getInstance().getTank2());
-        lv_bar_set_value(tank_2_gauge, AppData::getInstance().getTank2(), LV_ANIM_ON);
-        lv_bar_set_value(tank_2_gauge, (float)AppData::getInstance().getTank2() / TANK_MAX, LV_ANIM_ON);
+            lv_label_set_text_fmt(tank_2_label, "%d", AppData::getInstance().getTank2());
+            lv_bar_set_value(tank_2_gauge, AppData::getInstance().getTank2(), LV_ANIM_ON);
+            lv_bar_set_value(tank_2_gauge, (float)AppData::getInstance().getTank2() / TANK_MAX, LV_ANIM_ON);
 
-        // Set angles for visual elements
-        lv_img_set_angle(compass_img, AppData::getInstance().getHeading());
-        lv_obj_set_style_transform_angle(red_circle, AppData::getInstance().getHeading(), 0);
-        lv_obj_set_style_transform_angle(green_circle, AppData::getInstance().getHeading(), 0);
+            // Set angles for visual elements
+            lv_img_set_angle(compass_img, AppData::getInstance().getHeading());
+            lv_obj_set_style_transform_angle(red_circle, AppData::getInstance().getHeading(), 0);
+            lv_obj_set_style_transform_angle(green_circle, AppData::getInstance().getHeading(), 0);
+        }
+    } catch (const std::exception& e) {
+        Serial.print("Exception: ");
+        Serial.println(e.what());
     }
 }
 

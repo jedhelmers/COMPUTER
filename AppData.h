@@ -51,29 +51,18 @@ public:
         }
     }
 
-    void _setSelectedIndex(float value) {
+    void setSelectedIndex(float value) {
         if (selectedIndex != value) {
             selectedIndex = value;
             notifyListeners();
         }
     }
 
-    void _setSubSelectedIndex(float value) {
+    void setSubSelectedIndex(float value) {
         if (subSelectedIndex != value) {
             subSelectedIndex = value;
             notifyListeners();
         }
-    }
-
-    void setSelectedIndex(float value) {
-        if (!submenuStatus) {
-            _setSelectedIndex(value);
-        } else {
-            _setSubSelectedIndex(value);
-            setTheme(value);
-        }
-
-        notifyListeners();
     }
 
     void setTank1(float value) {
@@ -92,6 +81,7 @@ public:
 
     void setCurrentScreen(Screen newScreen) {
         if (newScreen != currentScreen) {
+            Serial.println("CHANGE");
             currentScreen = newScreen;
             notifyListeners();
         }
@@ -128,7 +118,7 @@ public:
     int getTank1() const { return tank1; }
     int getTank2() const { return tank2; }
     int getSelectedIndex() const { return selectedIndex; }
-    int getSetSubSelectedIndex() const { return subSelectedIndex; }
+    int getSubSelectedIndex() const { return subSelectedIndex; }
     ThemeState getSelectedTheme() const { return selectedTheme; }
     Screen getCurrentScreen() { return currentScreen; }
     MenuScreen getCurrentMenuScreen() { return currentMenuScreen; }
