@@ -20,6 +20,10 @@ private:
 
     mbed::CAN can1; // CAN object
 
+    enum MessageType {
+        Message = 0x411
+    };
+
 public:
     // Static method to get the singleton instance
     static CANBus& getInstance(uint32_t id = 0x20);

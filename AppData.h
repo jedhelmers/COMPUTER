@@ -118,7 +118,7 @@ public:
     int getTank2() const { return tank2; }
     int getSelectedIndex() const { return selectedIndex; }
     int getSubSelectedIndex() const { return subSelectedIndex; }
-    ThemeState getSelectedTheme() const { return selectedTheme; }
+    int getSelectedTheme() const { return static_cast<int>(selectedTheme); }
     Screen getCurrentScreen() { return currentScreen; }
     MenuScreen getCurrentMenuScreen() { return currentMenuScreen; }
     String getMessage() const { return message; }

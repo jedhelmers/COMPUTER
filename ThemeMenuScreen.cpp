@@ -7,7 +7,9 @@ lv_obj_t * themes_main;
 lv_obj_t *themeMenuItems[6];
 
 void updateSelectedThemeItem() {
+    Serial.println("SANITY 0");
     if (AppData::getInstance().getCurrentScreen() == Screen::MENU && AppData::getInstance().getCurrentMenuScreen() == MenuScreen::THEMES && themes_main != nullptr) {
+        Serial.println("SANITY 1");
         // Reset all select states
         for (int i = 0; i < ThemeStateNames.size(); i++) {
             lv_obj_clear_state(themeMenuItems[i], LV_STATE_CHECKED);
@@ -15,11 +17,12 @@ void updateSelectedThemeItem() {
         // // Apply the selected state and style to the current item
         lv_obj_add_state(themeMenuItems[AppData::getInstance().getSelectedTheme()], LV_STATE_CHECKED);
 
+        Serial.println("SANITY 2");
         if (!AppData::getInstance().getSubmenuStatus()) {
-            Serial.println("ADD STYLE");
+            Serial.println("SANITY 3");
             lv_obj_add_style(themeMenuItems[AppData::getInstance().getSelectedTheme()], style_sub_selected, LV_STATE_CHECKED);
         } else {
-            Serial.println("REMOVE STYLE");
+            Serial.println("SANITY 4");
             lv_obj_remove_style(themeMenuItems[AppData::getInstance().getSelectedTheme()], style_sub_selected, LV_STATE_CHECKED);
         }
     }
@@ -70,15 +73,15 @@ void createThemeMenuScreen(lv_obj_t* parent) {
 void themeSelectionHandler() {
     if (digitalRead(UP_BUTTON) == HIGH) {
         AppData::getInstance().setSelectedTheme(
-            (AppData::getInstance().getSelectedTheme() + 1) % 5
+            (AppData::getInstance().getSelectedTheme() + 1) % 4
         );
         Serial.println("UP Button Pressed");
         delay(200);
     }
 
     if (digitalRead(DOWN_BUTTON) == HIGH) {
-        int _temp = (AppData::getInstance().getSelectedTheme() - 1) % 5;
-        if (_temp < 0) _temp = 5;
+        int _temp = (AppData::getInstance().getSelectedTheme() - 1) % 4;
+        if (_temp < 0) _temp = 4;
         AppData::getInstance().setSelectedTheme(_temp);
         Serial.println("DOWN Button Pressed");
         delay(200);

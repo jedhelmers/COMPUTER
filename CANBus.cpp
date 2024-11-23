@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "AppData.h"
 #include "CANBus.h"
 #include "config.h"
 
@@ -12,12 +13,13 @@ CANBus& CANBus::getInstance(uint32_t id) {
 CANBus::CANBus(uint32_t id)
     : canId(id),
       can1(PB_5, PB_13) { // Initialize CAN with specified pins
+      
 }
 
 // Initialize the CAN interface
 bool CANBus::begin() {
     // Set CAN frequency to 1 Mbps
-    if (can1.frequency(500000)) {
+    if (can1.frequency(250000)) {
         Serial.println("CAN frequency set to 1 Mbps.");
 
         // Reset the CAN controller to ensure it's in a known state
@@ -29,13 +31,14 @@ bool CANBus::begin() {
         // can1.MODE_REGISTER = (current_value & mask) | loopback_value;
 
         Serial.println("CAN initialized in loopback mode successfully!");
+        can1.mode(mbed::CAN::Normal);
+
         return true;
     } else {
         Serial.println("Failed to set CAN frequency.");
         return false;
     }
 }
-
 
 // Internal method to write a CAN message
 bool CANBus::_writeMessage(uint32_t id, uint8_t const* data, size_t length) {
@@ -45,6 +48,8 @@ bool CANBus::_writeMessage(uint32_t id, uint8_t const* data, size_t length) {
     }
 
     mbed::CANMessage message(id, data, length);
+    // mbed::CANMessage message(0x20, data, length, mbed::CANData, mbed::CANStandard);
+
 
     if (can1.write(message)) {
         Serial.print("Message sent successfully. ID: 0x");
@@ -79,14 +84,18 @@ bool CANBus::writeMessage(uint32_t id, uint8_t const* data, size_t length) {
 void CANBus::receive() {
     mbed::CANMessage msg;
     if (can1.read(msg)) {
-        Serial.print("Message received. ID: 0x");
-        Serial.print(msg.id, HEX);
-        Serial.print(" Data: ");
-        for (size_t i = 0; i < msg.len; i++) {
-            Serial.print(msg.data[i], HEX);
-            Serial.print(" ");
+        switch(msg.id) {
+            case MessageType::Message:
+                Serial.print("Message received. ID: 0x");
+                Serial.print(msg.id, HEX);
+                Serial.print(" Data: ");
+                for (size_t i = 0; i < msg.len; i++) {
+                    Serial.print(msg.data[i], HEX);
+                    Serial.print(" ");
+                }
+                Serial.println();
+                break;
         }
-        Serial.println();
     } else {
         // Serial.println("No CAN message available.");
     }

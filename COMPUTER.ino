@@ -34,7 +34,7 @@ void setup() {
 
   // Initialize CAN
   // Access the singleton instance
-  CANBus& canBus = CANBus::getInstance(0x20);
+  CANBus& canBus = CANBus::getInstance(0xf7);
 
   if (!canBus.begin()) {
     Serial.println("CAN bus initializing...");
@@ -43,12 +43,11 @@ void setup() {
 
   Serial.println("CAN bus initialized.");
 
-  uint8_t x[] = { 0xCA, 0xFE, 0, 0, 0, 0, 0, 0 };
-  static uint32_t xx = 5;
-  memcpy(&x[4], &xx, sizeof(xx));
-  if (canBus.writeMessage(x, sizeof(x))) {
-    Serial.println("Message sent successfully.");
-  }
+
+  uint8_t msg_data[] = { 0xCA, 0xFE, 0, 0, 0, 0, 0, 0 };
+
+  // Transmit a CAN message
+  canBus.writeMessage(0x20, msg_data, sizeof(msg_data));
 }
 
 void loop() {
@@ -111,43 +110,45 @@ void loop() {
 
   CANBus& canBus = CANBus::getInstance();
 
-  if (compassSensor.getHeading() > 330) {
-    Serial.println(compassSensor.getHeading());
+  // if (compassSensor.getHeading() > 330) {
+  //   Serial.println(compassSensor.getHeading());
 
-    uint8_t msg_data[] = { 0xCA, 0xFE, 0, 0, 0, 0, 0, 0 };
-    memcpy(&msg_data[4], &msg_cnt, sizeof(msg_cnt));
+  //   uint8_t msg_data[] = { 0xCA, 0xFE, 0, 0, 0, 0, 0, 0 };
+  //   memcpy(&msg_data[4], &msg_cnt, sizeof(msg_cnt));
 
-    // Use the singleton instance to send a message
-    // CANBus::getInstance().writeMessage(msg_data, sizeof(msg_data));
-    // Access the singleton instance
+  //   // Use the singleton instance to send a message
+  //   // CANBus::getInstance().writeMessage(msg_data, sizeof(msg_data));
+  //   // Access the singleton instance
 
-    // Transmit a CAN message
-    if (canBus.writeMessage(msg_data, sizeof(msg_data))) {
-      Serial.println("Message sent successfully.");
-    }
-  }
+  //   // Transmit a CAN message
+  //   // if (canBus.writeMessage(0x200, msg_data, sizeof(msg_data))) {
+  //   //   Serial.println("Message sent successfully.");
+  //   // }
+  // }
 
   uint32_t messageId;
   uint8_t receivedData[8];  // Maximum CAN frame size is 8 bytes
   size_t dataLength;
 
   // Attempt to read a message from the CAN bus
-  if (canBus.readMessage(messageId, receivedData, dataLength)) {
-    // Message received successfully
-    Serial.print("Message received. ID: 0x");
-    Serial.print(messageId, HEX);
-    Serial.print(" Length: ");
-    Serial.print(dataLength);
-    Serial.print(" Data: ");
-    for (size_t i = 0; i < dataLength; i++) {
-      Serial.print(receivedData[i], HEX);
-      Serial.print(" ");
-    }
-    Serial.println();
-  } else {
-    // No message available
-    // Serial.println("No CAN message available.");
-  }
+  // if (canBus.readMessage(messageId, receivedData, dataLength)) {
+  //   // Message received successfully
+  //   Serial.print("Message received. ID: 0x");
+  //   Serial.print(messageId, HEX);
+  //   Serial.print(" Length: ");
+  //   Serial.print(dataLength);
+  //   Serial.print(" Data: ");
+  //   for (size_t i = 0; i < dataLength; i++) {
+  //     Serial.print(receivedData[i], HEX);
+  //     Serial.print(" ");
+  //   }
+  //   Serial.println();
+  // } else {
+  //   // No message available
+  //   // Serial.println("No CAN message available.");
+  // }
+
+  canBus.receive();
 
   msg_cnt++;
 
