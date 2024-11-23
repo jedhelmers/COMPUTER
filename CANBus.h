@@ -23,7 +23,11 @@ private:
     enum MessageType {
         Message = 0x411,
         Tank1 = 0x221,
-        Tank2 = 0x222
+        Tank2 = 0x222,
+        Name = 0xD010004,
+        PPO2 = 0xD040004,
+        CellsStat = 0xdca0004,
+        Status = 0xdcb0004
     };
 
 public:

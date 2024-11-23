@@ -143,6 +143,18 @@ void CANBus::receive() {
                 AppData::getInstance().setMessage(dataString);
                 Serial.println(AppData::getInstance().getMessage());
                 break;
+            case MessageType::Name:
+                Serial.print("Name: ");
+                for (size_t i = 0; i < msg.len; i++) {
+                    Serial.print(msg.data[i], HEX);
+                    Serial.print(" ");
+                    dataString += (char)msg.data[i];
+                }
+                Serial.println("");
+
+                AppData::getInstance().setMessage(dataString);
+                Serial.println(AppData::getInstance().getMessage());
+                break;
             case MessageType::Tank1:
                 AppData::getInstance().setTank1(bigEndianByteArrayToInt(msg.data, 8));
                 break;
