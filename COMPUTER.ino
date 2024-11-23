@@ -103,8 +103,8 @@ void loop() {
   }
 
   // AppData::getInstance().setSelectedIndex(msg_cnt % 5);
-  AppData::getInstance().setTank1(msg_cnt % 100);
-  AppData::getInstance().setTank2((msg_cnt / 3) % 100);
+  // AppData::getInstance().setTank1(msg_cnt % 100);
+  // AppData::getInstance().setTank2((msg_cnt / 3) % 100);
   // ScreenManager::getInstance().switchTo(Screen::MENU);
   // ScreenManager::getInstance().switchTo(Screen::MAIN);
 

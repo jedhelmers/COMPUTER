@@ -29,12 +29,10 @@ void updateMainScreen() {
     try {
         if (main_screen != nullptr && AppData::getInstance().getCurrentScreen() == Screen::MAIN) {
             lv_label_set_text_fmt(tank_1_label, "%d", AppData::getInstance().getTank1());
-            lv_bar_set_value(tank_1_gauge, AppData::getInstance().getTank1(), LV_ANIM_ON);
-            lv_bar_set_value(tank_1_gauge, (float)AppData::getInstance().getTank1() / TANK_MAX, LV_ANIM_ON);
+            lv_bar_set_value(tank_1_gauge, 100 * (float)AppData::getInstance().getTank1() / TANK_MAX, LV_ANIM_ON);
 
             lv_label_set_text_fmt(tank_2_label, "%d", AppData::getInstance().getTank2());
-            lv_bar_set_value(tank_2_gauge, AppData::getInstance().getTank2(), LV_ANIM_ON);
-            lv_bar_set_value(tank_2_gauge, (float)AppData::getInstance().getTank2() / TANK_MAX, LV_ANIM_ON);
+            lv_bar_set_value(tank_2_gauge, 100 * (float)AppData::getInstance().getTank2() / TANK_MAX, LV_ANIM_ON);
 
             // Set angles for visual elements
             lv_img_set_angle(compass_img, AppData::getInstance().getHeading());
@@ -292,7 +290,7 @@ void createMainScreen(lv_obj_t* screen) {
     lv_obj_set_style_radius(tank_1_gauge, 0, LV_PART_INDICATOR); // No rounding on filled part
     lv_obj_set_style_bg_opa(tank_1_gauge, LV_OPA_TRANSP, LV_PART_MAIN);
     lv_obj_set_style_bg_color(tank_1_gauge, lv_color_hex(0x00FF00), LV_PART_INDICATOR); // Green fill
-    lv_bar_set_value(tank_1_gauge, 20, LV_ANIM_ON);
+    lv_bar_set_value(tank_1_gauge, 0, LV_ANIM_ON);
     lv_obj_set_pos(tank_1_gauge, 0, 10);
 
 
@@ -304,7 +302,7 @@ void createMainScreen(lv_obj_t* screen) {
     lv_obj_set_style_radius(tank_2_gauge, 0, LV_PART_INDICATOR); // No rounding on filled part
     lv_obj_set_style_bg_opa(tank_2_gauge, LV_OPA_TRANSP, LV_PART_MAIN);
     lv_obj_set_style_bg_color(tank_2_gauge, lv_color_hex(0x00FF00), LV_PART_INDICATOR); // Green fill
-    lv_bar_set_value(tank_2_gauge, 30, LV_ANIM_ON);
+    lv_bar_set_value(tank_2_gauge, 0, LV_ANIM_ON);
     lv_obj_set_pos(tank_2_gauge, 0, 10);
 
 

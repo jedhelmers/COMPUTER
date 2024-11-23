@@ -79,6 +79,16 @@ public:
         }
     }
 
+    void setTank1(int value) {
+        float newValue = static_cast<float>(value);
+        setTank1(newValue);
+    }
+
+    void setTank2(int value) {
+        float newValue = static_cast<float>(value);
+        setTank2(newValue);
+    }
+
     void setCurrentScreen(Screen newScreen) {
         if (newScreen != currentScreen) {
             currentScreen = newScreen;

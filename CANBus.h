@@ -18,10 +18,12 @@ private:
     // Internal write function
     bool _writeMessage(uint32_t id, uint8_t const* data, size_t length);
 
-    mbed::CAN can1; // CAN object
+    mbed::CAN can1;
 
     enum MessageType {
-        Message = 0x411
+        Message = 0x411,
+        Tank1 = 0x221,
+        Tank2 = 0x222
     };
 
 public:
@@ -34,6 +36,10 @@ public:
     // Write a message to the CAN bus
     bool writeMessage(uint8_t const* data, size_t length);
     bool writeMessage(uint32_t id, uint8_t const* data, size_t length);
+    uint32_t bytesToInt(const uint8_t* data, size_t length);
+    float bytesToFloatBigEndian(const uint8_t* data);
+    float bytesToFloat(const uint8_t* data);
+    int bigEndianByteArrayToInt(const unsigned char* byteArray, int size);
 
     // Optional: Add receive functionality
     void receive();

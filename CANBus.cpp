@@ -2,6 +2,8 @@
 #include "AppData.h"
 #include "CANBus.h"
 #include "config.h"
+#include <algorithm>
+#include <cstring>
 #include <string>
 
 // Static method to get the singleton instance
@@ -81,11 +83,50 @@ bool CANBus::writeMessage(uint32_t id, uint8_t const* data, size_t length) {
     return CANBus::_writeMessage(id, data, length);
 }
 
+uint32_t CANBus::bytesToInt(const uint8_t* data, size_t length) {
+    uint32_t result = 0;
+
+    // Assuming big-endian byte order
+    for (size_t i = 0; i < length; i++) {
+        result = (result << 8) | data[i];
+    }
+
+    return result;
+}
+
+int CANBus::bigEndianByteArrayToInt(const unsigned char* byteArray, int size) {
+    int result = 0;
+    for (int i = 0; i < size; ++i) {
+        result = (result << 8) | byteArray[i];
+    }
+    return result;
+}
+
+float CANBus::bytesToFloatBigEndian(const uint8_t* data) {
+    double result;
+    memcpy(&result, data, sizeof(result)); // Copy 8 bytes into a double
+    return result;
+}
+
+float CANBus::bytesToFloat(const unsigned char* bytes) {
+    float result;
+    unsigned char* floatBytes = reinterpret_cast<unsigned char*>(&result);
+
+    // Copy bytes in reverse order for big endian
+    for (int i = 0; i < sizeof(float); ++i) {
+        floatBytes[i] = bytes[sizeof(float) - 1 - i];
+    }
+
+    return result;
+}
+
+
 // Method to receive CAN messages
 void CANBus::receive() {
     mbed::CANMessage msg;
     if (can1.read(msg)) {
         String dataString;
+        float floatValue;
 
         switch(msg.id) {
             case MessageType::Message:
@@ -101,6 +142,12 @@ void CANBus::receive() {
 
                 AppData::getInstance().setMessage(dataString);
                 Serial.println(AppData::getInstance().getMessage());
+                break;
+            case MessageType::Tank1:
+                AppData::getInstance().setTank1(bigEndianByteArrayToInt(msg.data, 8));
+                break;
+            case MessageType::Tank2:
+                AppData::getInstance().setTank2(bigEndianByteArrayToInt(msg.data, 8));
                 break;
             default:
                 dataString = "";
