@@ -139,7 +139,7 @@ void init_styles() {
   lv_style_set_border_color(notification_style, lv_color_make(0, 0, 0));
   lv_style_set_border_opa(notification_style, 54);
   lv_style_set_radius(notification_style, 0);
-  lv_style_set_width(notification_style, 366);
+  lv_style_set_width(notification_style, lv_pct(100));
   lv_style_set_height(notification_style, 60);
   lv_style_set_text_font(notification_style, &lv_font_montserrat_22);
 

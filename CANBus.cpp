@@ -2,6 +2,7 @@
 #include "AppData.h"
 #include "CANBus.h"
 #include "config.h"
+#include <string>
 
 // Static method to get the singleton instance
 CANBus& CANBus::getInstance(uint32_t id) {
@@ -84,17 +85,26 @@ bool CANBus::writeMessage(uint32_t id, uint8_t const* data, size_t length) {
 void CANBus::receive() {
     mbed::CANMessage msg;
     if (can1.read(msg)) {
+        String dataString;
+
         switch(msg.id) {
             case MessageType::Message:
                 Serial.print("Message received. ID: 0x");
                 Serial.print(msg.id, HEX);
-                Serial.print(" Data: ");
+                // Serial.print(" Data: ");
+
                 for (size_t i = 0; i < msg.len; i++) {
-                    Serial.print(msg.data[i], HEX);
-                    Serial.print(" ");
+                    // Serial.print(msg.data[i], HEX);
+                    // Serial.print(" ");
+                    dataString += (char)msg.data[i];
                 }
-                Serial.println();
+
+                AppData::getInstance().setMessage(dataString);
+                Serial.println(AppData::getInstance().getMessage());
                 break;
+            default:
+                dataString = "";
+                AppData::getInstance().setMessage(dataString);
         }
     } else {
         // Serial.println("No CAN message available.");

@@ -3,8 +3,10 @@
 #include "MenuScreen.h"
 #include "DevicesScreen.h"
 #include "LoadScreen.h"
+#include "Notification.h"
 #include "AppData.h"
 #include <Arduino.h>
+
 
 void ScreenManager::switchTo(Screen newScreen) {
     if (newScreen != currentScreen) {
@@ -36,6 +38,8 @@ void ScreenManager::switchTo(Screen newScreen) {
             default:
                 Serial.println("Screen change failed.");
         }
+
+        displayMessage(screen);
 
         AppData::getInstance().setCurrentScreen(currentScreen);
     }
