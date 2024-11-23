@@ -25,14 +25,38 @@ char buffer[10];
 int direction = 40;
 int tank_1_value = 40;
 
+enum TankStatuses {
+    OK = 70,
+    WARNING = 50,
+    DANGER = 30
+};
+
+void setTankStatus(lv_obj_t *tank_gauge, float value) {
+    if (value >= TankStatuses::OK) {
+        lv_obj_set_style_bg_color(tank_gauge, lv_color_hex(0x00FF00), LV_PART_INDICATOR);
+    } else if (value <= TankStatuses::DANGER) {
+        lv_obj_set_style_bg_color(tank_gauge, lv_color_hex(0xFF0000), LV_PART_INDICATOR);
+    } else if (value <= TankStatuses::WARNING) {
+        lv_obj_set_style_bg_color(tank_gauge, lv_color_hex(0xFF5733), LV_PART_INDICATOR);
+    }
+}
+
 void updateMainScreen() {
     try {
         if (main_screen != nullptr && AppData::getInstance().getCurrentScreen() == Screen::MAIN) {
+            float tank_1 = 100 * ((float)AppData::getInstance().getTank1() / TANK_MAX);
             lv_label_set_text_fmt(tank_1_label, "%d", AppData::getInstance().getTank1());
-            lv_bar_set_value(tank_1_gauge, 100 * (float)AppData::getInstance().getTank1() / TANK_MAX, LV_ANIM_ON);
+            lv_bar_set_value(tank_1_gauge, tank_1, LV_ANIM_ON);
 
+
+            setTankStatus(tank_1_gauge, tank_1);
+
+
+            float tank_2 = 100 * ((float)AppData::getInstance().getTank2() / TANK_MAX);
             lv_label_set_text_fmt(tank_2_label, "%d", AppData::getInstance().getTank2());
-            lv_bar_set_value(tank_2_gauge, 100 * (float)AppData::getInstance().getTank2() / TANK_MAX, LV_ANIM_ON);
+            lv_bar_set_value(tank_2_gauge, tank_2, LV_ANIM_ON);
+            
+            setTankStatus(tank_2_gauge, tank_2);
 
             // Set angles for visual elements
             lv_img_set_angle(compass_img, AppData::getInstance().getHeading());
@@ -301,7 +325,7 @@ void createMainScreen(lv_obj_t* screen) {
     lv_obj_set_style_radius(tank_2_gauge, 0, LV_PART_MAIN); // No rounding on main part
     lv_obj_set_style_radius(tank_2_gauge, 0, LV_PART_INDICATOR); // No rounding on filled part
     lv_obj_set_style_bg_opa(tank_2_gauge, LV_OPA_TRANSP, LV_PART_MAIN);
-    lv_obj_set_style_bg_color(tank_2_gauge, lv_color_hex(0x00FF00), LV_PART_INDICATOR); // Green fill
+    lv_obj_set_style_bg_color(tank_2_gauge, lv_color_hex(0x00FF00), LV_PART_INDICATOR);
     lv_bar_set_value(tank_2_gauge, 0, LV_ANIM_ON);
     lv_obj_set_pos(tank_2_gauge, 0, 10);
 
